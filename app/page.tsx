@@ -10,21 +10,16 @@ export default function Home() {
   useEffect(() => {
     const fetchDataElements = async () => {
       try {
-        const response = await fetch("/api/dhis2", {
-          headers: {
-            'Accept': 'application/json',
-          }
-        });
+        const response = await fetch("/api/dhis2");
 
+        
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-
-        const data = await response.json(); // Declare 'data' only once
+        const data = await response.json();
         if (data.error) {
           throw new Error(data.error);
         }
-
         setDataElements(data.dataElements || []);
         setTableData(
           (data.dataElements || []).map((de: DataElement) => ({
@@ -36,6 +31,7 @@ export default function Home() {
       } catch (error) {
         console.error("Error fetching data elements:", error);
 
+        // Narrowing the error type
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
         setError(errorMessage);
